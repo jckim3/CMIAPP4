@@ -3,27 +3,29 @@ import Combine
 
 struct ContentView: View {
     var body: some View {
-        TabView {
-            HomeView()
-                .tabItem {
-                    Image(systemName: "house")
-                    Text("Home")
-                }
-            CalendarView()
-                .tabItem {
-                    Image(systemName: "calendar")
-                    Text("Calendar")
-                }
-            ReservationsView()
-                .tabItem {
-                    Image(systemName: "book")
-                    Text("Reservations")
-                }
-            ClosedRoomsView()
-                .tabItem {
-                    Image(systemName: "lock")
-                    Text("Closed Rooms")
-                }
+        NavigationView {
+            TabView {
+                HomeView()
+                    .tabItem {
+                        Image(systemName: "house")
+                        Text("Home")
+                    }
+                CalendarView()
+                    .tabItem {
+                        Image(systemName: "calendar")
+                        Text("Calendar")
+                    }
+                ReservationsView()
+                    .tabItem {
+                        Image(systemName: "book")
+                        Text("Reservations")
+                    }
+                ClosedRoomsView()
+                    .tabItem {
+                        Image(systemName: "lock")
+                        Text("Closed Rooms")
+                    }
+            }
         }
     }
 }
@@ -41,10 +43,8 @@ struct HomeView: View {
         }
         .background(Color.orange.opacity(0.1))
         .edgesIgnoringSafeArea(.all)
-        .onAppear {
-            // 초기 데이터 로드
-        }
     }
+    
     func safeAreaInsets() -> UIEdgeInsets {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first else { return .zero }
@@ -84,9 +84,7 @@ struct HeaderView: View {
             
             Spacer()
             
-            Button(action: {
-                showSettings.toggle()
-            }) {
+            NavigationLink(destination: SettingsView()) {
                 Image(systemName: "gearshape")
                     .imageScale(.large)
                     .foregroundColor(.white)
@@ -296,7 +294,7 @@ struct PerformanceView: View {
                     currentMonthSales = formattedTotalSales
                     cashSales = formattedTotalPrice
                     creditSales = formattedTotalCreditPrice
-                 }
+                }
             )
     }
 }
@@ -326,6 +324,40 @@ struct PerformanceItemView: View {
 struct SalesResponse: Codable {
     let totalPrice: Double
     let totalCreditPrice: Double
+}
+
+// 새로운 설정 뷰
+struct SettingsView: View {
+    var body: some View {
+        VStack {
+            // 오늘 날짜 표시
+            Text("App Created on \(getCurrentDate())")
+                .font(.headline)
+                .padding()
+
+            Spacer()
+            
+            // Back 버튼
+            Button(action: {
+                // 돌아가기 액션
+            }) {
+                Text("Back")
+                    .foregroundColor(.blue)
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .shadow(radius: 2)
+            }
+            .padding()
+        }
+        .navigationBarTitle("Settings", displayMode: .inline)
+    }
+    
+    func getCurrentDate() -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter.string(from: Date())
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
