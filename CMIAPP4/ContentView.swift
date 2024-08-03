@@ -72,28 +72,41 @@ struct ClosedRoomsView: View {
 
 struct HeaderView: View {
     @State private var showSettings: Bool = false
+    @State private var currentDate: String = ""
 
     var body: some View {
-        HStack {
-            Text(currentDateString())
-                .font(.headline)
-                .padding()
-                .background(Color.clear)
-                .cornerRadius(10)
-                .foregroundColor(.white)
-            
-            Spacer()
-            
-            NavigationLink(destination: SettingsView()) {
-                Image(systemName: "gearshape")
-                    .imageScale(.large)
-                    .foregroundColor(.white)
+        ZStack {
+            Image("carriagemotorinn_logo") // 에셋에 추가한 이미지 이름
+                .resizable()
+                .scaledToFill()
+                .opacity(0.3) // 투명도를 높여 선명하게
+                .frame(height: 80) // 필요에 따라 높이를 조절
+                .clipped() // 이미지가 넘치지 않도록 자르기
+
+            HStack {
+                Text(currentDate)
+                    .font(.headline)
                     .padding()
+                    .background(Color.clear)
+                    .cornerRadius(10)
+                    .foregroundColor(.white)
+                
+                Spacer()
+                
+                NavigationLink(destination: SettingsView()) {
+                    Image(systemName: "gearshape")
+                        .imageScale(.large)
+                        .foregroundColor(.white)
+                        .padding()
+                }
+                .background(Color.red.opacity(0.1))
             }
-            .background(Color.red.opacity(0.1))
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
         .background(Color.red)
+        .onAppear {
+            currentDate = currentDateString()
+        }
     }
     
     func currentDateString() -> String {
@@ -105,10 +118,14 @@ struct HeaderView: View {
 }
 
 struct StatsView: View {
+    @State private var checkInCount: Int = 0
+    @State private var checkOutCount: Int = 0
+    @State private var cancellable: AnyCancellable?
+
     var body: some View {
         VStack(spacing: 10) {
             HStack {
-                Text("Today")
+                Text("오늘")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .padding(.top, 10)
@@ -116,12 +133,51 @@ struct StatsView: View {
                 Spacer()
             }
             HStack {
-                StatItemView(title: "Check-ins", value: "0")
-                StatItemView(title: "Check-outs", value: "0")
+                StatItemView(title: "Check-ins", value: "\(checkInCount)")
+                StatItemView(title: "Check-outs", value: "\(checkOutCount)")
                 StatItemView(title: "Stay-throughs", value: "0")
             }
         }
         .padding()
+        .onAppear {
+            fetchTodayCheckInAndCheckOutCounts()
+        }
+    }
+
+    func fetchTodayCheckInAndCheckOutCounts() {
+        let baseURL = "https://www.carriagemotorinn.com:444/api/motel" // API의 기본 URL
+        guard let url = URL(string: "\(baseURL)/rooms/today-checkin-checkout") else {
+            print("Invalid URL")
+            return
+        }
+        
+        cancellable = URLSession.shared.dataTaskPublisher(for: url)
+            .tryMap { result -> Data in
+                guard let response = result.response as? HTTPURLResponse else {
+                    throw URLError(.badServerResponse)
+                }
+                print("Response status code: \(response.statusCode)")
+                guard response.statusCode == 200 else {
+                    throw URLError(.badServerResponse)
+                }
+                return result.data
+            }
+            .decode(type: TodayCheckInOutResponse.self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        print("Error: \(error)")
+                    }
+                },
+                receiveValue: { response in
+                    self.checkInCount = response.todayCheckIns
+                    self.checkOutCount = response.todayCheckOuts
+                }
+            )
     }
 }
 
@@ -212,6 +268,7 @@ struct PerformanceView: View {
     @State private var currentMonthSales: String = "0"
     @State private var cashSales: String = "0"
     @State private var creditSales: String = "0"
+    @State private var roomSoldSummary: String = "Loading..."
     @State private var cancellable: AnyCancellable?
     let options = ["Rooms sold", "Revenue"]
 
@@ -230,11 +287,13 @@ struct PerformanceView: View {
             .onChange(of: selectedView) { newValue in
                 if newValue == "Revenue" {
                     fetchCurrentMonthSales()
+                } else {
+                    fetchRoomRentStatus()
                 }
             }
             
             if selectedView == "Rooms sold" {
-                PerformanceItemView(title: "Rooms sold", value: "0")
+                PerformanceItemView(title: "Room Sold", value: roomSoldSummary)
             } else {
                 PerformanceItemView(title: "Revenue", value: "$\(currentMonthSales)")
                 PerformanceItemView(title: "Cash Sales", value: "$\(cashSales)")
@@ -247,6 +306,9 @@ struct PerformanceView: View {
         .cornerRadius(10)
         .shadow(radius: 5)
         .padding()
+        .onAppear {
+            fetchRoomRentStatus()
+        }
     }
     
     func fetchCurrentMonthSales() {
@@ -297,6 +359,42 @@ struct PerformanceView: View {
                 }
             )
     }
+    
+    func fetchRoomRentStatus() {
+        let baseURL = "https://www.carriagemotorinn.com:444/api/motel" // API의 기본 URL
+        guard let url = URL(string: "\(baseURL)/rooms/payment-types") else {
+            message = "Invalid URL"
+            return
+        }
+        
+        cancellable = URLSession.shared.dataTaskPublisher(for: url)
+            .tryMap { result -> Data in
+                guard let response = result.response as? HTTPURLResponse else {
+                    throw URLError(.badServerResponse)
+                }
+                print("Response status code: \(response.statusCode)")
+                guard response.statusCode == 200 else {
+                    throw URLError(.badServerResponse)
+                }
+                return result.data
+            }
+            .decode(type: PaymentTypeCounts.self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        message = "Error: \(error.localizedDescription)"
+                        print("Error: \(error)")
+                    }
+                },
+                receiveValue: { paymentTypeCounts in
+                    roomSoldSummary = "Daily: \(paymentTypeCounts.da), Weekly: \(paymentTypeCounts.wk), Monthly: \(paymentTypeCounts.mo), Week Voucher: \(paymentTypeCounts.wc), Master Lease: \(paymentTypeCounts.ml)"
+                }
+            )
+    }
 }
 
 struct PerformanceItemView: View {
@@ -326,12 +424,27 @@ struct SalesResponse: Codable {
     let totalCreditPrice: Double
 }
 
+// Define the PaymentTypeCounts struct to decode the API response for room rent status
+struct PaymentTypeCounts: Codable {
+    let da: Int
+    let wk: Int
+    let mo: Int
+    let wc: Int
+    let ml: Int
+}
+
+// Define the TodayCheckInOutResponse struct to decode the API response for today's check-ins and check-outs
+struct TodayCheckInOutResponse: Codable {
+    let todayCheckIns: Int
+    let todayCheckOuts: Int
+}
+
 // 새로운 설정 뷰
 struct SettingsView: View {
     var body: some View {
         VStack {
             // 오늘 날짜 표시
-            Text("App Created on \(getCurrentDate())")
+            Text("App Created on \(getAppCreationDate())")
                 .font(.headline)
                 .padding()
 
@@ -353,10 +466,13 @@ struct SettingsView: View {
         .navigationBarTitle("Settings", displayMode: .inline)
     }
     
-    func getCurrentDate() -> String {
+    func getAppCreationDate() -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
-        return formatter.string(from: Date())
+        
+        // 앱의 생성 날짜를 정적 날짜로 설정
+        let creationDate = Date(timeIntervalSince1970: 1688294400) // 특정 생성 날짜 설정
+        return formatter.string(from: creationDate)
     }
 }
 
