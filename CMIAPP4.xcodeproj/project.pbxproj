@@ -8,12 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		A589774B2C584E94004EF11E /* CMIAPP4App.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589774A2C584E94004EF11E /* CMIAPP4App.swift */; };
-		A589774D2C584E94004EF11E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589774C2C584E94004EF11E /* ContentView.swift */; };
 		A589774F2C584E96004EF11E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A589774E2C584E96004EF11E /* Assets.xcassets */; };
 		A58977532C584E96004EF11E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A58977522C584E96004EF11E /* Preview Assets.xcassets */; };
 		A589775D2C584E96004EF11E /* CMIAPP4Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589775C2C584E96004EF11E /* CMIAPP4Tests.swift */; };
 		A58977672C584E96004EF11E /* CMIAPP4UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58977662C584E96004EF11E /* CMIAPP4UITests.swift */; };
 		A58977692C584E96004EF11E /* CMIAPP4UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58977682C584E96004EF11E /* CMIAPP4UITestsLaunchTests.swift */; };
+		A58977762C5EE059004EF11E /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58977752C5EE059004EF11E /* HomeView.swift */; };
+		A58977782C5EE09A004EF11E /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58977772C5EE09A004EF11E /* StatsView.swift */; };
+		A589777A2C5EE0BF004EF11E /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58977792C5EE0BF004EF11E /* HeaderView.swift */; };
+		A589777C2C5EE0E4004EF11E /* AvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589777B2C5EE0E4004EF11E /* AvailabilityView.swift */; };
+		A589777E2C5EE10C004EF11E /* PerformanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589777D2C5EE10C004EF11E /* PerformanceView.swift */; };
+		A58977802C5EE15C004EF11E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589777F2C5EE15C004EF11E /* SettingsView.swift */; };
+		A58977822C5EE175004EF11E /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58977812C5EE175004EF11E /* Model.swift */; };
+		A58977842C5EE191004EF11E /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58977832C5EE191004EF11E /* APIService.swift */; };
+		A58977862C5EE1BE004EF11E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58977852C5EE1BE004EF11E /* ContentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +44,6 @@
 /* Begin PBXFileReference section */
 		A58977472C584E94004EF11E /* CMIAPP4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CMIAPP4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A589774A2C584E94004EF11E /* CMIAPP4App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMIAPP4App.swift; sourceTree = "<group>"; };
-		A589774C2C584E94004EF11E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A589774E2C584E96004EF11E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A58977502C584E96004EF11E /* CMIAPP4.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CMIAPP4.entitlements; sourceTree = "<group>"; };
 		A58977522C584E96004EF11E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -45,6 +52,15 @@
 		A58977622C584E96004EF11E /* CMIAPP4UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CMIAPP4UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A58977662C584E96004EF11E /* CMIAPP4UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMIAPP4UITests.swift; sourceTree = "<group>"; };
 		A58977682C584E96004EF11E /* CMIAPP4UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMIAPP4UITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A58977752C5EE059004EF11E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		A58977772C5EE09A004EF11E /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		A58977792C5EE0BF004EF11E /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		A589777B2C5EE0E4004EF11E /* AvailabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailabilityView.swift; sourceTree = "<group>"; };
+		A589777D2C5EE10C004EF11E /* PerformanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceView.swift; sourceTree = "<group>"; };
+		A589777F2C5EE15C004EF11E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A58977812C5EE175004EF11E /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		A58977832C5EE191004EF11E /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		A58977852C5EE1BE004EF11E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,10 +112,18 @@
 			isa = PBXGroup;
 			children = (
 				A589774A2C584E94004EF11E /* CMIAPP4App.swift */,
-				A589774C2C584E94004EF11E /* ContentView.swift */,
 				A589774E2C584E96004EF11E /* Assets.xcassets */,
 				A58977502C584E96004EF11E /* CMIAPP4.entitlements */,
 				A58977512C584E96004EF11E /* Preview Content */,
+				A58977752C5EE059004EF11E /* HomeView.swift */,
+				A58977772C5EE09A004EF11E /* StatsView.swift */,
+				A58977792C5EE0BF004EF11E /* HeaderView.swift */,
+				A589777B2C5EE0E4004EF11E /* AvailabilityView.swift */,
+				A589777D2C5EE10C004EF11E /* PerformanceView.swift */,
+				A589777F2C5EE15C004EF11E /* SettingsView.swift */,
+				A58977812C5EE175004EF11E /* Model.swift */,
+				A58977832C5EE191004EF11E /* APIService.swift */,
+				A58977852C5EE1BE004EF11E /* ContentView.swift */,
 			);
 			path = CMIAPP4;
 			sourceTree = "<group>";
@@ -259,7 +283,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A589774D2C584E94004EF11E /* ContentView.swift in Sources */,
+				A58977822C5EE175004EF11E /* Model.swift in Sources */,
+				A58977862C5EE1BE004EF11E /* ContentView.swift in Sources */,
+				A589777A2C5EE0BF004EF11E /* HeaderView.swift in Sources */,
+				A58977802C5EE15C004EF11E /* SettingsView.swift in Sources */,
+				A58977782C5EE09A004EF11E /* StatsView.swift in Sources */,
+				A589777E2C5EE10C004EF11E /* PerformanceView.swift in Sources */,
+				A58977762C5EE059004EF11E /* HomeView.swift in Sources */,
+				A58977842C5EE191004EF11E /* APIService.swift in Sources */,
+				A589777C2C5EE0E4004EF11E /* AvailabilityView.swift in Sources */,
 				A589774B2C584E94004EF11E /* CMIAPP4App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
