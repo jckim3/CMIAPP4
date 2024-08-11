@@ -1,3 +1,4 @@
+
 import SwiftUI
 import Combine
 
@@ -8,8 +9,11 @@ struct PerformanceView: View {
     @State private var cashSales: String = "0"
     @State private var creditSales: String = "0"
     @State private var roomSoldSummary: String = "Loading..."
+    @State private var todayRevenue: String = "0"
+    @State private var todayCashSales: String = "0"
+    @State private var todayCreditSales: String = "0"
     @State private var cancellable: AnyCancellable?
-    let options = ["Rooms sold", "Revenue"]
+    let options = ["Rooms sold", "Revenue", "Today Revenue"]
 
     var body: some View {
         VStack(spacing: 10) {
@@ -26,6 +30,8 @@ struct PerformanceView: View {
             .onChange(of: selectedView) { newValue in
                 if newValue == "Revenue" {
                     fetchCurrentMonthSales()
+                } else if newValue == "Today Revenue" {
+                    fetchTodayRevenue()
                 } else {
                     fetchRoomRentStatus()
                 }
@@ -33,10 +39,14 @@ struct PerformanceView: View {
             
             if selectedView == "Rooms sold" {
                 PerformanceItemView(title: "Room Sold", value: roomSoldSummary)
-            } else {
+            } else if selectedView == "Revenue" {
                 PerformanceItemView(title: "Revenue", value: "$\(currentMonthSales)")
                 PerformanceItemView(title: "Cash Sales", value: "$\(cashSales)")
                 PerformanceItemView(title: "Credit Sales", value: "$\(creditSales)")
+            } else if selectedView == "Today Revenue" {
+                PerformanceItemView(title: "Today's Revenue", value: "$\(todayRevenue)")
+                PerformanceItemView(title: "Today's Cash Sales", value: "$\(todayCashSales)")
+                PerformanceItemView(title: "Today's Credit Sales", value: "$\(todayCreditSales)")
             }
         }
         .frame(maxWidth: .infinity)
@@ -58,13 +68,11 @@ struct PerformanceView: View {
                 formatter.numberStyle = .decimal
                 formatter.maximumFractionDigits = 0 // 소수점 표시하지 않음
 
-                // 각 판매 값 포맷팅
                 let formattedTotalPrice = formatter.string(from: NSNumber(value: salesResponse.totalPrice)) ?? "\(salesResponse.totalPrice)"
                 let formattedTotalCreditPrice = formatter.string(from: NSNumber(value: salesResponse.totalCreditPrice)) ?? "\(salesResponse.totalCreditPrice)"
                 let totalSales = salesResponse.totalPrice + salesResponse.totalCreditPrice
                 let formattedTotalSales = formatter.string(from: NSNumber(value: totalSales)) ?? "\(totalSales)"
 
-                // 상태 변수 업데이트
                 currentMonthSales = formattedTotalSales
                 cashSales = formattedTotalPrice
                 creditSales = formattedTotalCreditPrice
@@ -80,6 +88,29 @@ struct PerformanceView: View {
             switch result {
             case .success(let paymentTypeCounts):
                 roomSoldSummary = "Daily: \(paymentTypeCounts.da), Weekly: \(paymentTypeCounts.wk), Monthly: \(paymentTypeCounts.mo), Week Voucher: \(paymentTypeCounts.wc), Master Lease: \(paymentTypeCounts.ml)"
+            case .failure(let error):
+                message = "Error: \(error.localizedDescription)"
+                print("Error: \(error)")
+            }
+        }
+    }
+
+    func fetchTodayRevenue() {
+        APIService.shared.fetchTodaySales { result in
+            switch result {
+            case .success(let salesResponse):
+                let formatter = NumberFormatter()
+                formatter.numberStyle = .decimal
+                formatter.maximumFractionDigits = 0
+
+                let formattedTotalPrice = formatter.string(from: NSNumber(value: salesResponse.totalPrice)) ?? "\(salesResponse.totalPrice)"
+                let formattedTotalCreditPrice = formatter.string(from: NSNumber(value: salesResponse.totalCreditPrice)) ?? "\(salesResponse.totalCreditPrice)"
+                let totalSales = salesResponse.totalPrice + salesResponse.totalCreditPrice
+                let formattedTotalSales = formatter.string(from: NSNumber(value: totalSales)) ?? "\(totalSales)"
+
+                todayRevenue = formattedTotalSales
+                todayCashSales = formattedTotalPrice
+                todayCreditSales = formattedTotalCreditPrice
             case .failure(let error):
                 message = "Error: \(error.localizedDescription)"
                 print("Error: \(error)")

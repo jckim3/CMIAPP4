@@ -110,6 +110,38 @@ class APIService {
             .store(in: &cancellables)
     }
     
+    func fetchTodaySales(completion: @escaping (Result<SalesResponse, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/sales/today") else {
+            completion(.failure(URLError(.badURL)))
+            return
+        }
+        
+        URLSession.shared.dataTaskPublisher(for: url)
+            .tryMap { result -> Data in
+                guard let response = result.response as? HTTPURLResponse, response.statusCode == 200 else {
+                    throw URLError(.badServerResponse)
+                }
+                return result.data
+            }
+            .decode(type: SalesResponse.self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completionResult in
+                    switch completionResult {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                },
+                receiveValue: { salesResponse in
+                    completion(.success(salesResponse))
+                }
+            )
+            .store(in: &cancellables)
+    }
+    
+    
     func fetchRoomRentStatus(completion: @escaping (Result<PaymentTypeCounts, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/rooms/payment-types") else {
             completion(.failure(URLError(.badURL)))
