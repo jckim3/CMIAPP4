@@ -36,11 +36,18 @@ struct SettingsView: View {
     }
     
     func getAppCreationDate() -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        
-        // 앱의 생성 날짜를 정적 날짜로 설정
-        let creationDate = Date(timeIntervalSince1970: 1688294400) // 특정 생성 날짜 설정
-        return formatter.string(from: creationDate)
-    }
+           let formatter = DateFormatter()
+           formatter.dateStyle = .medium
+           
+           // UserDefaults에 저장된 앱 생성 날짜를 불러옴
+           if let savedDate = UserDefaults.standard.string(forKey: "AppCreationDate") {
+               return savedDate
+           } else {
+               // 처음 실행 시 앱 생성 날짜를 현재 날짜로 설정하고 UserDefaults에 저장
+               let creationDate = Date()
+               let creationDateString = formatter.string(from: creationDate)
+               UserDefaults.standard.set(creationDateString, forKey: "AppCreationDate")
+               return creationDateString
+           }
+       }
 }
