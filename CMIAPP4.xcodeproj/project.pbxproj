@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A56E09642C84D378008B6A99 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56E09632C84D378008B6A99 /* CalendarView.swift */; };
 		A589774B2C584E94004EF11E /* CMIAPP4App.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589774A2C584E94004EF11E /* CMIAPP4App.swift */; };
 		A589774F2C584E96004EF11E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A589774E2C584E96004EF11E /* Assets.xcassets */; };
 		A58977532C584E96004EF11E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A58977522C584E96004EF11E /* Preview Assets.xcassets */; };
@@ -42,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A56E09632C84D378008B6A99 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		A58977472C584E94004EF11E /* CMIAPP4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CMIAPP4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A589774A2C584E94004EF11E /* CMIAPP4App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMIAPP4App.swift; sourceTree = "<group>"; };
 		A589774E2C584E96004EF11E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				A58977812C5EE175004EF11E /* Model.swift */,
 				A58977832C5EE191004EF11E /* APIService.swift */,
 				A58977852C5EE1BE004EF11E /* ContentView.swift */,
+				A56E09632C84D378008B6A99 /* CalendarView.swift */,
 			);
 			path = CMIAPP4;
 			sourceTree = "<group>";
@@ -289,6 +292,7 @@
 				A58977802C5EE15C004EF11E /* SettingsView.swift in Sources */,
 				A58977782C5EE09A004EF11E /* StatsView.swift in Sources */,
 				A589777E2C5EE10C004EF11E /* PerformanceView.swift in Sources */,
+				A56E09642C84D378008B6A99 /* CalendarView.swift in Sources */,
 				A58977762C5EE059004EF11E /* HomeView.swift in Sources */,
 				A58977842C5EE191004EF11E /* APIService.swift in Sources */,
 				A589777C2C5EE0E4004EF11E /* AvailabilityView.swift in Sources */,

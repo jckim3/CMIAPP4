@@ -29,6 +29,17 @@ struct StatsView: View {
     }
 
     func fetchTodayCheckInAndCheckOutCounts() {
+        // 오늘의 체크인 수를 가져오는 API 호출
+         APIService.shared.fetchTodayCheckInCount { result in
+             switch result {
+             case .success(let checkInCount):
+                 self.checkInCount = checkInCount
+             case .failure(let error):
+                 print("Error fetching check-in count: \(error)")
+             }
+         }
+
+         // 기존 체크아웃 수를 가져오는 API 호출
         APIService.shared.fetchTodayCheckInAndCheckOutCounts { result in
             switch result {
             case .success(let response):

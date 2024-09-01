@@ -36,9 +36,9 @@ struct ContentView: View {
     }
 }
 
-struct CalendarView: View {
-    var body: some View {
-        Text("Calendar View")
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }
 
@@ -51,12 +51,6 @@ struct ReservationsView: View {
 struct ClosedRoomsView: View {
     var body: some View {
         Text("Closed Rooms View")
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
     }
 }
 
