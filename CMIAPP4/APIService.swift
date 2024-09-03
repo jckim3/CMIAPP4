@@ -17,6 +17,68 @@ class APIService {
 
     private var cancellables = Set<AnyCancellable>()
     
+    func fetchTodayCheckInRoomList(completion: @escaping (Result<[UInt8], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/rooms/today-checkin-list") else {
+            completion(.failure(URLError(.badURL)))
+            return
+        }
+        
+        URLSession.shared.dataTaskPublisher(for: url)
+            .tryMap { result -> Data in
+                guard let response = result.response as? HTTPURLResponse, response.statusCode == 200 else {
+                    throw URLError(.badServerResponse)
+                }
+                return result.data
+            }
+            .decode(type: [UInt8].self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completionResult in
+                    switch completionResult {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                },
+                receiveValue: { roomList in
+                    completion(.success(roomList))
+                }
+            )
+            .store(in: &cancellables)
+    }
+    
+    func fetchAvailableRoomsCount(completion: @escaping (Result<Int, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/available-rooms-count") else {
+            completion(.failure(URLError(.badURL)))
+            return
+        }
+        
+        URLSession.shared.dataTaskPublisher(for: url)
+            .tryMap { result -> Data in
+                guard let response = result.response as? HTTPURLResponse, response.statusCode == 200 else {
+                    throw URLError(.badServerResponse)
+                }
+                return result.data
+            }
+            .decode(type: Int.self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completionResult in
+                    switch completionResult {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                },
+                receiveValue: { count in
+                    completion(.success(count))
+                }
+            )
+            .store(in: &cancellables)
+    }
+    
     func fetchTodayCheckInCount(completion: @escaping (Result<Int, Error>) -> Void) {
             guard let url = URL(string: "\(baseURL)/rooms/today-checkin-count") else {
                 completion(.failure(URLError(.badURL)))
@@ -79,36 +141,7 @@ class APIService {
             .store(in: &cancellables)
     }
     
-    func fetchAvailableRoomsCount(completion: @escaping (Result<Int, Error>) -> Void) {
-        guard let url = URL(string: "\(baseURL)/available-rooms-count") else {
-            completion(.failure(URLError(.badURL)))
-            return
-        }
-        
-        URLSession.shared.dataTaskPublisher(for: url)
-            .tryMap { result -> Data in
-                guard let response = result.response as? HTTPURLResponse, response.statusCode == 200 else {
-                    throw URLError(.badServerResponse)
-                }
-                return result.data
-            }
-            .decode(type: Int.self, decoder: JSONDecoder())
-            .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { completionResult in
-                    switch completionResult {
-                    case .finished:
-                        break
-                    case .failure(let error):
-                        completion(.failure(error))
-                    }
-                },
-                receiveValue: { count in
-                    completion(.success(count))
-                }
-            )
-            .store(in: &cancellables)
-    }
+   
     
     func fetchCurrentMonthSales(completion: @escaping (Result<SalesResponse, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/sales/current-month") else {

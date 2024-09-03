@@ -5,7 +5,9 @@ struct StatsView: View {
     @State private var checkInCount: Int = 0
     @State private var checkOutCount: Int = 0
     @State private var cancellable: AnyCancellable?
-
+    @State private var showAlert: Bool = false
+    @State private var checkInRoomList: [UInt8] = []
+    
     var body: some View {
         VStack(spacing: 10) {
             HStack {
@@ -17,7 +19,12 @@ struct StatsView: View {
                 Spacer()
             }
             HStack {
-                StatItemView(title: "Check-ins", value: "\(checkInCount)")
+                StatItemView(title: "Check-ins", value: "\(checkInCount)", action: {
+                                    fetchTodayCheckInRoomList()
+                                })
+                                .alert(isPresented: $showAlert) {
+                                    Alert(title: Text("Today's Check-In Rooms"), message: Text(checkInRoomListString()), dismissButton: .default(Text("OK")))
+                                }
                 StatItemView(title: "Check-outs", value: "\(checkOutCount)")
                 StatItemView(title: "Stay-throughs", value: "0")
             }
@@ -50,25 +57,52 @@ struct StatsView: View {
             }
         }
     }
+
+    func checkInRoomListString() -> String {
+            if checkInRoomList.isEmpty {
+                return "No rooms checked in today."
+            } else {
+                return checkInRoomList.map { "\($0)" }.joined(separator: ", ")
+            }
+        }
+    
+    func fetchTodayCheckInRoomList() {
+            // 오늘의 체크인된 방 리스트를 가져오는 API 호출
+            APIService.shared.fetchTodayCheckInRoomList { result in
+                switch result {
+                case .success(let roomList):
+                    self.checkInRoomList = roomList
+                    self.showAlert = true
+                case .failure(let error):
+                    print("Error fetching room list: \(error)")
+                }
+            }
+        }
+    
 }
 
 struct StatItemView: View {
     let title: String
     let value: String
+    var action: (() -> Void)? = nil
     
     var body: some View {
-        VStack {
-            Text(title)
-                .font(.subheadline)
-                .foregroundColor(.gray)
-            Text(value)
-                .font(.title)
-                .fontWeight(.bold)
+            Button(action: {
+                action?()
+            }) {
+                VStack {
+                    Text(title)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    Text(value)
+                        .font(.title)
+                        .fontWeight(.bold)
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.white)
+                .cornerRadius(10)
+                .shadow(radius: 2)
+            }
         }
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background(Color.white)
-        .cornerRadius(10)
-        .shadow(radius: 2)
-    }
 }
