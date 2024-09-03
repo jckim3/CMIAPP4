@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A56E09642C84D378008B6A99 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56E09632C84D378008B6A99 /* CalendarView.swift */; };
+		A56E09662C86A874008B6A99 /* RevenueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56E09652C86A874008B6A99 /* RevenueViewModel.swift */; };
+		A56E09682C86A909008B6A99 /* Revenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56E09672C86A909008B6A99 /* Revenue.swift */; };
 		A589774B2C584E94004EF11E /* CMIAPP4App.swift in Sources */ = {isa = PBXBuildFile; fileRef = A589774A2C584E94004EF11E /* CMIAPP4App.swift */; };
 		A589774F2C584E96004EF11E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A589774E2C584E96004EF11E /* Assets.xcassets */; };
 		A58977532C584E96004EF11E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A58977522C584E96004EF11E /* Preview Assets.xcassets */; };
@@ -44,6 +46,8 @@
 
 /* Begin PBXFileReference section */
 		A56E09632C84D378008B6A99 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		A56E09652C86A874008B6A99 /* RevenueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevenueViewModel.swift; sourceTree = "<group>"; };
+		A56E09672C86A909008B6A99 /* Revenue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Revenue.swift; sourceTree = "<group>"; };
 		A58977472C584E94004EF11E /* CMIAPP4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CMIAPP4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A589774A2C584E94004EF11E /* CMIAPP4App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMIAPP4App.swift; sourceTree = "<group>"; };
 		A589774E2C584E96004EF11E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -127,6 +131,8 @@
 				A58977832C5EE191004EF11E /* APIService.swift */,
 				A58977852C5EE1BE004EF11E /* ContentView.swift */,
 				A56E09632C84D378008B6A99 /* CalendarView.swift */,
+				A56E09652C86A874008B6A99 /* RevenueViewModel.swift */,
+				A56E09672C86A909008B6A99 /* Revenue.swift */,
 			);
 			path = CMIAPP4;
 			sourceTree = "<group>";
@@ -297,6 +303,8 @@
 				A58977842C5EE191004EF11E /* APIService.swift in Sources */,
 				A589777C2C5EE0E4004EF11E /* AvailabilityView.swift in Sources */,
 				A589774B2C584E94004EF11E /* CMIAPP4App.swift in Sources */,
+				A56E09682C86A909008B6A99 /* Revenue.swift in Sources */,
+				A56E09662C86A874008B6A99 /* RevenueViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

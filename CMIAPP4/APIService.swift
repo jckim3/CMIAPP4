@@ -17,6 +17,37 @@ class APIService {
 
     private var cancellables = Set<AnyCancellable>()
     
+    
+    func fetchRevenue(for year: Int, completion: @escaping (Result<[Revenue], Error>) -> Void) {
+            guard let url = URL(string: "\(baseURL)/revenue/\(year)") else {
+                completion(.failure(URLError(.badURL)))
+                return
+            }
+            
+            URLSession.shared.dataTaskPublisher(for: url)
+                .tryMap { result -> Data in
+                    guard let response = result.response as? HTTPURLResponse, response.statusCode == 200 else {
+                        throw URLError(.badServerResponse)
+                    }
+                    return result.data
+                }
+                .decode(type: [Revenue].self, decoder: JSONDecoder())
+                .receive(on: DispatchQueue.main)
+                .sink(
+                    receiveCompletion: { completionResult in
+                        switch completionResult {
+                        case .finished:
+                            break
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    },
+                    receiveValue: { revenues in
+                        completion(.success(revenues))
+                    }
+                )
+                .store(in: &cancellables)
+        }
     func fetchTodayCheckInRoomList(completion: @escaping (Result<[UInt8], Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/rooms/today-checkin-list") else {
             completion(.failure(URLError(.badURL)))
