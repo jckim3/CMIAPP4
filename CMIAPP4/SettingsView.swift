@@ -10,6 +10,9 @@ import Foundation
 import SwiftUI
 
 struct SettingsView: View {
+    @State private var latestTag: String = "Loading..."
+    @State private var errorMessage: String?
+    
     var body: some View {
         VStack {
             // 오늘 날짜 표시
@@ -27,6 +30,18 @@ struct SettingsView: View {
             
             Spacer()
             
+            // 최신 버전 표시
+            if let errorMessage = errorMessage {
+                Text("Error: \(errorMessage)")
+                    .foregroundColor(.red)
+            } else {
+                Text("Latest Version: \(latestTag)")
+                    .font(.headline)
+                    .padding()
+            }
+            
+            Spacer()
+            
             // Back 버튼
             Button(action: {
                 // 돌아가기 액션
@@ -41,6 +56,9 @@ struct SettingsView: View {
             .padding()
         }
         .navigationBarTitle("Settings", displayMode: .inline)
+        .onAppear {
+                    fetchLatestTag()
+         }   
     }
     
     func getAppCreationDateString() -> String {
@@ -73,4 +91,14 @@ struct SettingsView: View {
             return nil
         }
     
+    private func fetchLatestTag() {
+            APIService.shared.fetchLatestTag { result in
+                switch result {
+                case .success(let tag):
+                    latestTag = tag
+                case .failure(let error):
+                    errorMessage = error.localizedDescription
+                }
+            }
+        }
 }

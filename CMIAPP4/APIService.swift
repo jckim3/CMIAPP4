@@ -17,6 +17,38 @@ class APIService {
 
     private var cancellables = Set<AnyCancellable>()
     
+    // 최신 Git 태그를 가져오는 메서드 추가
+    func fetchLatestTag(completion: @escaping (Result<String, Error>) -> Void) {
+        guard let url = URL(string: "https://www.carriagemotorinn.com:444/api/updates/latest-tag") else {
+            completion(.failure(URLError(.badURL)))
+            return
+        }
+        
+        URLSession.shared.dataTaskPublisher(for: url)
+            .tryMap { result -> Data in
+                guard let response = result.response as? HTTPURLResponse, response.statusCode == 200 else {
+                    throw URLError(.badServerResponse)
+                }
+                return result.data
+            }
+            .decode(type: [String: String].self, decoder: JSONDecoder())
+            .compactMap { $0["tag"] }
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completionResult in
+                    switch completionResult {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                },
+                receiveValue: { tag in
+                    completion(.success(tag))
+                }
+            )
+            .store(in: &cancellables)
+    }
     
     func fetchRevenue(for year: Int, completion: @escaping (Result<[Revenue], Error>) -> Void) {
             guard let url = URL(string: "\(baseURL)/revenue/\(year)") else {
