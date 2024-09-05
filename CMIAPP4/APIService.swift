@@ -55,7 +55,8 @@ class APIService {
                 completion(.failure(URLError(.badURL)))
                 return
             }
-            
+        // URL 출력
+            print("Fetching revenue for year: \(year), URL: \(url)")
             URLSession.shared.dataTaskPublisher(for: url)
                 .tryMap { result -> Data in
                     guard let response = result.response as? HTTPURLResponse, response.statusCode == 200 else {
