@@ -22,7 +22,7 @@ struct SettingsView: View {
 
             // 앱 정지 경고 메시지
             if let daysRemaining = getDaysRemainingBeforeSuspension() {
-                Text("App will be suspended in \(daysRemaining) days.")
+                Text("App will be suspended in \(daysRemaining) days.on \(getSuspensionDateString()).")
                     .foregroundColor(.red)
                     .font(.subheadline)
                     .padding()
@@ -64,9 +64,11 @@ struct SettingsView: View {
     func getAppCreationDateString() -> String {
             let formatter = DateFormatter()
             formatter.dateStyle = .medium
-            
+            let currentDate = Date()
+            return formatter.string(from: currentDate)
+        
             // UserDefaults에 저장된 앱 생성 날짜를 불러옴
-            if let savedDate = UserDefaults.standard.object(forKey: "AppCreationDate") as? Date {
+            /*if let savedDate = UserDefaults.standard.object(forKey: "AppCreationDate") as? Date {
                 return formatter.string(from: savedDate)
             } else {
                 // 처음 실행 시 앱 생성 날짜를 현재 날짜로 설정하고 UserDefaults에 저장
@@ -74,23 +76,46 @@ struct SettingsView: View {
                 UserDefaults.standard.set(creationDate, forKey: "AppCreationDate")
                 return formatter.string(from: creationDate)
             }
+             */
         }
-    func getDaysRemainingBeforeSuspension() -> Int? {
-            if let creationDate = UserDefaults.standard.object(forKey: "AppCreationDate") as? Date {
-                let calendar = Calendar.current
-                let suspensionDate = calendar.date(byAdding: .day, value: 10, to: creationDate)!
-
-                let currentDate = Date()
-                if currentDate < suspensionDate {
-                    let remainingDays = calendar.dateComponents([.day], from: currentDate, to: suspensionDate).day
-                    return remainingDays
-                } else {
-                    return 0 // 앱이 이미 정지되어야 하는 상태일 경우
-                }
-            }
-            return nil
-        }
+    func getSuspensionDateString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        let calendar = Calendar.current
+        let currentDate = Date()
+        
+        // 오늘 기준으로 10일 후의 날짜 계산
+        let suspensionDate = calendar.date(byAdding: .day, value: 10, to: currentDate)!
+        return formatter.string(from: suspensionDate)
+    }
     
+    func getDaysRemainingBeforeSuspension() -> Int? {
+        /*
+         if let creationDate = UserDefaults.standard.object(forKey: "AppCreationDate") as? Date {
+         let calendar = Calendar.current
+         let suspensionDate = calendar.date(byAdding: .day, value: 10, to: creationDate)!
+         
+         let currentDate = Date()
+         if currentDate < suspensionDate {
+         let remainingDays = calendar.dateComponents([.day], from: currentDate, to: suspensionDate).day
+         return remainingDays
+         } else {
+         return 0 // 앱이 이미 정지되어야 하는 상태일 경우
+         }
+         }
+         return nil
+         }
+         */
+        let calendar = Calendar.current
+        let currentDate = Date()
+        
+        // 오늘 기준으로 10일 후의 날짜 계산
+        let suspensionDate = calendar.date(byAdding: .day, value: 10, to: currentDate)!
+        
+        // 오늘부터 정지일까지 남은 날 계산
+        let remainingDays = calendar.dateComponents([.day], from: currentDate, to: suspensionDate).day
+        return remainingDays
+    }
     private func fetchLatestTag() {
             APIService.shared.fetchLatestTag { result in
                 switch result {
