@@ -53,6 +53,28 @@ struct CalendarView: View {
                 }
                 .padding()
             }
+            // 총합 표시
+            VStack(spacing: 10) {
+                if let totalCash = viewModel.totalCashRevenue {
+                    Text("연간 현금 매출 총합: \(formattedAmount(totalCash))")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                }
+                
+                if let totalCredit = viewModel.totalCreditRevenue {
+                    Text("연간 신용카드 매출 총합: \(formattedAmount(totalCredit))")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                }
+                
+                if let total = viewModel.totalRevenue {
+                    Text("연간 총 매출: \(formattedAmount(total))")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .padding(.top)
+                }
+            }
+            .padding()
         }
         .padding()
     }
