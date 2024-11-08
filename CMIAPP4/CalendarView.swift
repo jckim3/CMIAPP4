@@ -73,6 +73,14 @@ struct CalendarView: View {
                         .fontWeight(.bold)
                         .padding(.top)
                 }
+                // 연간 총 매출 12개월 평균 추가
+                if let average = viewModel.averageRevenue {
+                    Text("월 평균 매출: \(formattedAmount(average))")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.gray)
+                        .padding(.top, 5)
+                }
             }
             .padding()
         }
