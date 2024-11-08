@@ -15,7 +15,7 @@ struct SettingsView: View {
     
     var body: some View {
         VStack {
-            // 오늘 날짜 표시
+            // 앱 설치 날짜 표시
             Text("App Created on \(getAppCreationDateString())")
                 .font(.headline)
                 .padding()
@@ -58,26 +58,22 @@ struct SettingsView: View {
         .navigationBarTitle("Settings", displayMode: .inline)
         .onAppear {
                     fetchLatestTag()
-         }   
+            saveAppInstallationDateIfNeeded()
+        }
     }
     
     func getAppCreationDateString() -> String {
             let formatter = DateFormatter()
             formatter.dateStyle = .medium
-            let currentDate = Date()
-            return formatter.string(from: currentDate)
+
         
-            // UserDefaults에 저장된 앱 생성 날짜를 불러옴
-            /*if let savedDate = UserDefaults.standard.object(forKey: "AppCreationDate") as? Date {
-                return formatter.string(from: savedDate)
-            } else {
-                // 처음 실행 시 앱 생성 날짜를 현재 날짜로 설정하고 UserDefaults에 저장
-                let creationDate = Date()
-                UserDefaults.standard.set(creationDate, forKey: "AppCreationDate")
-                return formatter.string(from: creationDate)
-            }
-             */
+        // UserDefaults에 저장된 앱 생성 날짜를 불러옴
+        if let savedDate = UserDefaults.standard.object(forKey: "AppCreationDate") as? Date {
+            return formatter.string(from: savedDate)
+        } else {
+            return "Unknown"
         }
+     }
     func getSuspensionDateString() -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -126,4 +122,11 @@ struct SettingsView: View {
                 }
             }
         }
+    private func saveAppInstallationDateIfNeeded() {
+        // 최초 실행 시 앱 설치 날짜를 저장
+        if UserDefaults.standard.object(forKey: "AppInstallationDate") == nil {
+            let installationDate = Date()
+            UserDefaults.standard.set(installationDate, forKey: "AppInstallationDate")
+        }
+    }
 }
