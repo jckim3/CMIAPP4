@@ -300,4 +300,35 @@ class APIService {
             )
             .store(in: &cancellables)
     }
+    
+    func fetchRoomOccupancy(completion: @escaping (Result<RoomOccupancyResponse, Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/rooms/occupancy-data") else {
+            completion(.failure(URLError(.badURL)))
+            return
+        }
+        
+        URLSession.shared.dataTaskPublisher(for: url)
+            .tryMap { result -> Data in
+                guard let response = result.response as? HTTPURLResponse, response.statusCode == 200 else {
+                    throw URLError(.badServerResponse)
+                }
+                return result.data
+            }
+            .decode(type: RoomOccupancyResponse.self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completionResult in
+                    switch completionResult {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                },
+                receiveValue: { occupancyResponse in
+                    completion(.success(occupancyResponse))
+                }
+            )
+            .store(in: &cancellables)
+    }
 }

@@ -27,3 +27,9 @@ struct TodayCheckInOutResponse: Codable {
     let todayCheckIns: Int
     let todayCheckOuts: Int
 }
+
+struct RoomOccupancyResponse: Decodable {
+    let totalRooms: Int
+    let availableRooms: Int
+}
+

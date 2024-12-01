@@ -8,6 +8,11 @@ struct StatsView: View {
     @State private var showAlert: Bool = false
     @State private var checkInRoomList: [UInt8] = []
     
+    @State private var totalRooms: Int = 34
+    @State private var availableRooms: Int = 10
+    @State private var occupyRatio: Double = 0
+
+    
     var body: some View {
         VStack(spacing: 10) {
             HStack {
@@ -26,12 +31,15 @@ struct StatsView: View {
                                     Alert(title: Text("Today's Check-In Rooms"), message: Text(checkInRoomListString()), dismissButton: .default(Text("OK")))
                                 }
                 StatItemView(title: "Check-outs", value: "\(checkOutCount)")
-                StatItemView(title: "Stay-throughs", value: "0")
+                //StatItemView(title: "Stay-throughs", value: "0")
+                StatItemView(title: "Occupy Ratio", value: "\(String(format: "%.1f", occupyRatio))%")
+
             }
         }
         .padding()
         .onAppear {
             fetchTodayCheckInAndCheckOutCounts()
+            fetchOccupyRatio()
         }
     }
 
@@ -78,7 +86,21 @@ struct StatsView: View {
                 }
             }
         }
-    
+
+    func fetchOccupyRatio() {
+            APIService.shared.fetchRoomOccupancy { result in
+                switch result {
+                case .success(let response):
+                    self.totalRooms = response.totalRooms
+                    self.availableRooms = response.availableRooms
+                    let occupiedRooms = totalRooms - availableRooms
+                    self.occupyRatio = (Double(occupiedRooms) / Double(totalRooms)) * 100
+                case .failure(let error):
+                    print("Error fetching occupancy data: \(error)")
+                }
+            }
+        }
+
 }
 
 struct StatItemView: View {
