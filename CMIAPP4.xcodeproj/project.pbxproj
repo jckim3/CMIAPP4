@@ -25,6 +25,7 @@
 		A58977822C5EE175004EF11E /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58977812C5EE175004EF11E /* Model.swift */; };
 		A58977842C5EE191004EF11E /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58977832C5EE191004EF11E /* APIService.swift */; };
 		A58977862C5EE1BE004EF11E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58977852C5EE1BE004EF11E /* ContentView.swift */; };
+		A5EC410D2D38A66E00342950 /* RoomMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5EC410C2D38A66300342950 /* RoomMetrics.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		A58977812C5EE175004EF11E /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		A58977832C5EE191004EF11E /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		A58977852C5EE1BE004EF11E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A5EC410C2D38A66300342950 /* RoomMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomMetrics.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 		A58977492C584E94004EF11E /* CMIAPP4 */ = {
 			isa = PBXGroup;
 			children = (
+				A5EC410C2D38A66300342950 /* RoomMetrics.swift */,
 				A589774A2C584E94004EF11E /* CMIAPP4App.swift */,
 				A589774E2C584E96004EF11E /* Assets.xcassets */,
 				A58977502C584E96004EF11E /* CMIAPP4.entitlements */,
@@ -304,6 +307,7 @@
 				A589777C2C5EE0E4004EF11E /* AvailabilityView.swift in Sources */,
 				A589774B2C584E94004EF11E /* CMIAPP4App.swift in Sources */,
 				A56E09682C86A909008B6A99 /* Revenue.swift in Sources */,
+				A5EC410D2D38A66E00342950 /* RoomMetrics.swift in Sources */,
 				A56E09662C86A874008B6A99 /* RevenueViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
