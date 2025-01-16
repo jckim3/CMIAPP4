@@ -10,7 +10,9 @@ import SwiftUI
 struct RoomMetricsView: View {
     @State private var selectedMonth = 1
     @State private var selectedYear = Calendar.current.component(.year, from: Date())
-    @State private var selectedDay = 1
+    @State private var roomMetrics: [RoomMetric] = [] // API 데이터를 저장할 상태 변수
+    @State private var isLoading = false // 로딩 상태 표시
+    @State private var errorMessage: String? // 에러 메시지
 
     var body: some View {
         VStack(spacing: 20) {
@@ -45,29 +47,46 @@ struct RoomMetricsView: View {
                 .font(.headline)
                 .padding()
 
-            // Scrollable Days and Weekdays
-            ScrollView(.horizontal) {
-                HStack(spacing: 10) {
-                    ForEach(1...daysInMonth(year: selectedYear, month: selectedMonth), id: \.self) { day in
-                        VStack {
-                            Text("\(day)")
-                                .font(.headline)
-                            Text(weekday(for: day, month: selectedMonth, year: selectedYear))
-                                .font(.subheadline)
+            // Room Metrics List
+            if isLoading {
+                ProgressView("Loading...")
+                    .padding()
+            } else if let errorMessage = errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .padding()
+            } else if roomMetrics.isEmpty {
+                Text("No data available for the selected year and month.")
+                    .padding()
+            } else {
+                ScrollView(.vertical) {
+                    VStack(spacing: 10) {
+                        ForEach(roomMetrics) { metric in
+                            VStack(alignment: .leading) {
+                                Text("Date: \(metric.date)")
+                                    .font(.headline)
+                                Text("Total Rooms: \(metric.totalRooms)")
+                                Text("Occupied Rooms: \(metric.occupiedRooms)")
+                                Text("Occupancy Ratio: \(metric.occupancyRatio, specifier: "%.2f")")
+                                Text("Total Revenue: $\(metric.totalRevenue, specifier: "%.2f")")
+                                Text("ADR: $\(metric.adr, specifier: "%.2f")")
+                                Text("REVPAR: $\(metric.revpar, specifier: "%.2f")")
+                                Text("Profit Per Room: $\(metric.profitPerRoom, specifier: "%.2f")")
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(8)
                         }
-                        .frame(width: 60, height: 60)
-                        .background(Color.gray.opacity(0.2))
-                        .cornerRadius(8)
                     }
+                    .padding()
                 }
-                .padding()
             }
+
             Spacer()
 
             // Get Room Metrics Button
-            Button(action: {
-                print("Getting room metrics for \(selectedYear)-\(String(format: "%02d", selectedMonth))")
-            }) {
+            Button(action: fetchRoomMetrics) {
                 Text("Get Room Metrics")
                     .font(.headline)
                     .padding()
@@ -80,7 +99,25 @@ struct RoomMetricsView: View {
         }
         .padding()
     }
+    private func fetchRoomMetrics() {
+           isLoading = true
+           errorMessage = nil
 
+           APIService.shared.fetchRoomMetrics(year: selectedYear, month: selectedMonth) { result in
+               DispatchQueue.main.async {
+                   isLoading = false
+                   switch result {
+                   case .success(let metrics):
+                       roomMetrics = metrics
+                   case .failure(let error):
+                       errorMessage = "Error: \(error.localizedDescription)"
+                   }
+               }
+           }
+       }
+
+    
+    // 날짜 계산
     private func daysInMonth(year: Int, month: Int) -> Int {
         let calendar = Calendar.current
         let dateComponents = DateComponents(year: year, month: month)
@@ -88,13 +125,30 @@ struct RoomMetricsView: View {
         let range = calendar.range(of: .day, in: .month, for: date)!
         return range.count
     }
+}
 
-    private func weekday(for day: Int, month: Int, year: Int) -> String {
-        let calendar = Calendar.current
-        let dateComponents = DateComponents(year: year, month: month, day: day)
-        let date = calendar.date(from: dateComponents)!
-        let formatter = DateFormatter()
-        formatter.dateFormat = "E" // Short weekday format (e.g., Mon, Tue)
-        return formatter.string(from: date)
+// Room Metric 모델 정의
+struct RoomMetric: Identifiable, Codable {
+    let id: Int
+    let date: String
+    let totalRooms: Int
+    let occupiedRooms: Int
+    let occupancyRatio: Double
+    let totalRevenue: Double
+    let adr: Double
+    let revpar: Double
+    let profitPerRoom: Double
+
+    enum CodingKeys: String, CodingKey {
+        case id = "roomMetricsId"
+        case date = "roomMetricsDate"
+        case totalRooms = "total_Rooms"
+        case occupiedRooms = "occupied_Rooms"
+        case occupancyRatio = "occupancy_Ratio"
+        case totalRevenue = "total_Revenue"
+        case adr = "adr"
+        case revpar = "revpar"
+        case profitPerRoom = "profit_Per_Room"
     }
 }
+

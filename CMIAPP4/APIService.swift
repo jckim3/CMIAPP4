@@ -16,6 +16,44 @@ class APIService {
     private let baseURL = "https://www.carriagemotorinn.com:444/api/motel"
 
     private var cancellables = Set<AnyCancellable>()
+    //https://www.carriagemotorinn.com:444/api/motel/room-metrics/by-year-month?year=2025&month=1
+    func fetchRoomMetrics(year: Int, month: Int, completion: @escaping (Result<[RoomMetric], Error>) -> Void) {
+           guard let url = URL(string: "\(baseURL)/room-metrics/by-year-month?year=\(year)&month=\(month)") else {
+           //guard let url = URL(string: "\(baseURL)/room-metrics/by-year-month?year=2025&month=1") else {
+               completion(.failure(URLError(.badURL)))
+               return
+           }
+
+           URLSession.shared.dataTask(with: url) { data, response, error in
+               if let error = error {
+                   DispatchQueue.main.async {
+                       completion(.failure(error))
+                   }
+                   return
+               }
+
+               guard let data = data else {
+                   DispatchQueue.main.async {
+                       completion(.failure(URLError(.badServerResponse)))
+                   }
+                   return
+               }
+
+               do {
+                   let metrics = try JSONDecoder().decode([RoomMetric].self, from: data)
+                   DispatchQueue.main.async {
+                       completion(.success(metrics))
+                   }
+               } catch {
+                   DispatchQueue.main.async {
+                       completion(.failure(error))
+                   }
+               }
+           }.resume()
+       }
+    
+    
+    
     
     // 최신 Git 태그를 가져오는 메서드 추가
     func fetchLatestTag(completion: @escaping (Result<String, Error>) -> Void) {
