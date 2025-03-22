@@ -24,9 +24,19 @@ class RevenueViewModel: ObservableObject {
            revenues.reduce(Decimal(0)) { $0 + $1.totalRevenue }
        }
     // 평균 매출 (총 매출 금액 / 12)
+ //   var averageRevenue: Decimal? {
+ //       guard let totalRevenue = totalRevenue else { return nil }
+ //       return totalRevenue / Decimal(12)
+ //   }
+    
     var averageRevenue: Decimal? {
-        guard let totalRevenue = totalRevenue else { return nil }
-        return totalRevenue / Decimal(12)
+        let monthsWithRevenue = revenues.filter { $0.totalRevenue > 0 }
+        let total = monthsWithRevenue.reduce(Decimal(0)) { $0 + $1.totalRevenue }
+        let count = monthsWithRevenue.count
+
+        guard count > 0 else { return nil }
+
+        return total / Decimal(count)
     }
     func fetchRevenue(for year: Int) {
         APIService.shared.fetchRevenue(for: year) { [weak self] result in
